@@ -211,11 +211,13 @@ These are the frame and register details as used by the script.
 
 ## Credits
 
-Written by **<your name>** ([@your-github-username](https://github.com/your-github-username)).
+Based on knowledge about RS-485 communication shared by Mike Scott [@minceheid] on his project https://github.com/minceheid/openeo
+Written by **joao prates** ([@jprates](https://github.com/jprates))
 
 ## License
 
-See the [LICENSE](LICENSE) file.
+MIT Licence.
+Free to use and share as long as credits are kept and no commercial use or profit is obtained from it.
 
 ## Disclaimer
 
