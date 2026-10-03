@@ -1,0 +1,20 @@
+# Heartbeat for alm-mqtt-bridge's watchdog.
+#
+# Without a heartbeat, the bridge forces the wallboxes to SAFE_AMPS and resumes
+# them (60 s after start-up, 300 s after the first heartbeat). The first heartbeat
+# must arrive within 60 s of the bridge starting, so publish more often than that.
+#
+# Add this as an item of automations.yaml, or create a new automation in the UI
+# and use "Edit in YAML". Older Home Assistant versions use `trigger:` /
+# `platform:` / `service:` instead of `triggers:` / `trigger:` / `action:`.
+- id: alm_bridge_heartbeat
+  alias: "ALM bridge heartbeat"
+  mode: single
+  triggers:
+    - trigger: time_pattern
+      seconds: "/30"
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: "ecohub/control/heartbeat"
+        payload: "1"

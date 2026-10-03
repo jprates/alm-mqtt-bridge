@@ -223,7 +223,12 @@ def send_and_receive(ser, address, packet, read_timeout=0.5):
             raise TimeoutError(f"Timeout: Expected 14 bytes, received {len(response)}")
 
         recv_crc = response[-2:]
-        if address.lower() == "aaaa0003" and recv_crc == b"\x00\x00":
+        # The CT/site device may answer with a zero checksum; accept it
+        is_ct = any(
+            d["type"] == "ct" and d["addr"].lower() == address.lower()
+            for d in DEVICES.values()
+        )
+        if is_ct and recv_crc == b"\x00\x00":
             return response
 
         expected_crc = calc_crc(response[:-2])

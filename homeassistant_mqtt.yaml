@@ -1,0 +1,236 @@
+# Home Assistant MQTT entities for alm-mqtt-bridge.
+#
+# This file has no top-level `mqtt:` key, so include it from configuration.yaml with:
+#
+#     mqtt: !include homeassistant_mqtt.yaml
+#
+# (If you already have other MQTT YAML entities, merge the lists instead.)
+#
+# Naming: wallbox_a, wallbox_b and site are the `name` values of the entries in
+# DEVICES in alm_mqtt_bridge.py (IDs 1, 2 and 3). The topics use the IDs, so
+# if you change IDs in the script, change them here too. Field names (f1, f2,
+# f3, amps_limit, paused, cable_connected) come from the bridge's JSON state.
+#
+# The heartbeat automation is in homeassistant_heartbeat_automation.yaml.
+
+sensor:
+
+  # Wallbox A (ID 1)
+  - name: "wallbox_a_f1"
+    unique_id: "wallbox_a_f1"
+    state_topic: "ecohub/wallbox/1/state"
+    value_template: "{{ value_json.f1 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/1/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "wallbox_a_f2"
+    unique_id: "wallbox_a_f2"
+    state_topic: "ecohub/wallbox/1/state"
+    value_template: "{{ value_json.f2 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/1/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "wallbox_a_f3"
+    unique_id: "wallbox_a_f3"
+    state_topic: "ecohub/wallbox/1/state"
+    value_template: "{{ value_json.f3 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/1/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "wallbox_a_amps_limit"
+    unique_id: "wallbox_a_amps_limit"
+    state_topic: "ecohub/wallbox/1/state"
+    value_template: "{{ value_json.amps_limit | round(0) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/1/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  # Wallbox B (ID 2)
+  - name: "wallbox_b_f1"
+    unique_id: "wallbox_b_f1"
+    state_topic: "ecohub/wallbox/2/state"
+    value_template: "{{ value_json.f1 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/2/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "wallbox_b_f2"
+    unique_id: "wallbox_b_f2"
+    state_topic: "ecohub/wallbox/2/state"
+    value_template: "{{ value_json.f2 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/2/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "wallbox_b_f3"
+    unique_id: "wallbox_b_f3"
+    state_topic: "ecohub/wallbox/2/state"
+    value_template: "{{ value_json.f3 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/2/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "wallbox_b_amps_limit"
+    unique_id: "wallbox_b_amps_limit"
+    state_topic: "ecohub/wallbox/2/state"
+    value_template: "{{ value_json.amps_limit | round(0) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/wallbox/2/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  # Site CT (ID 3)
+  - name: "site_f1"
+    unique_id: "site_f1"
+    state_topic: "ecohub/ct/3/state"
+    value_template: "{{ value_json.f1 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/ct/3/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "site_f2"
+    unique_id: "site_f2"
+    state_topic: "ecohub/ct/3/state"
+    value_template: "{{ value_json.f2 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/ct/3/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "site_f3"
+    unique_id: "site_f3"
+    state_topic: "ecohub/ct/3/state"
+    value_template: "{{ value_json.f3 | round(2) }}"
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: A
+    availability_topic: "ecohub/ct/3/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+number:
+  # Write controls (sliders for the dashboard).
+  # The bridge treats 0 as "pause" and rejects values between 0 and 6 (and above 32).
+  # Setting a limit does NOT resume a paused wallbox: use the *_paused switch.
+  - name: "wallbox_a_set_amps"
+    unique_id: "wallbox_a_set_amps"
+    state_topic: "ecohub/wallbox/1/state"
+    value_template: "{{ value_json.amps_limit | round(0) }}"
+    command_topic: "ecohub/wallbox/1/set_amps"
+    command_template: "{{ value | float }}"
+    unit_of_measurement: "A"
+    min: 0
+    max: 32
+    step: 1
+    mode: slider
+    availability_topic: "ecohub/wallbox/1/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+  - name: "wallbox_b_set_amps"
+    unique_id: "wallbox_b_set_amps"
+    state_topic: "ecohub/wallbox/2/state"
+    value_template: "{{ value_json.amps_limit | round(0) }}"
+    command_topic: "ecohub/wallbox/2/set_amps"
+    command_template: "{{ value | float }}"
+    unit_of_measurement: "A"
+    min: 0
+    max: 32
+    step: 1
+    mode: slider
+    availability_topic: "ecohub/wallbox/2/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+
+binary_sensor:
+  # Availability of the ALM MQTT bridge. It uses the CT/site availability topic,
+  # which is also the bridge's MQTT Last Will topic.
+  - name: "ecohub_online"
+    unique_id: "ecohub_online"
+    state_topic: "ecohub/ct/3/availability"
+    payload_on: "online"
+    payload_off: "offline"
+    device_class: connectivity
+
+  # Whether the charging cable is plugged into the vehicle
+  - name: "wallbox_a_cable_connected"
+    unique_id: "wallbox_a_cable_connected"
+    state_topic: "ecohub/wallbox/1/state"
+    availability_topic: "ecohub/wallbox/1/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+    value_template: "{{ value_json.cable_connected }}"
+    payload_on: "true"
+    payload_off: "false"
+    icon: "mdi:ev-station"
+
+  - name: "wallbox_b_cable_connected"
+    unique_id: "wallbox_b_cable_connected"
+    state_topic: "ecohub/wallbox/2/state"
+    availability_topic: "ecohub/wallbox/2/availability"
+    payload_available: "online"
+    payload_not_available: "offline"
+    value_template: "{{ value_json.cable_connected }}"
+    payload_on: "true"
+    payload_off: "false"
+    icon: "mdi:ev-station"
+
+  - name: "heartbeat_alive"
+    unique_id: "heartbeat_alive"
+    state_topic: "ecohub/status/heartbeat_alive"
+    payload_on: "ON"
+    payload_off: "OFF"
+    device_class: "connectivity"
+    icon: "mdi:wifi"
+
+switch:
+  - name: "wallbox_a_paused"
+    unique_id: "wallbox_a_paused"
+    state_topic: "ecohub/wallbox/1/state"
+    value_template: "{{ value_json.paused | default(false) | lower }}"
+    state_on: "true"
+    state_off: "false"
+    command_topic: "ecohub/wallbox/1/set_pause"
+    payload_on: "true"
+    payload_off: "false"
+
+  - name: "wallbox_b_paused"
+    unique_id: "wallbox_b_paused"
+    state_topic: "ecohub/wallbox/2/state"
+    value_template: "{{ value_json.paused | default(false) | lower }}"
+    state_on: "true"
+    state_off: "false"
+    command_topic: "ecohub/wallbox/2/set_pause"
+    payload_on: "true"
+    payload_off: "false"
