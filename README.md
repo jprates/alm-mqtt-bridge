@@ -26,7 +26,7 @@ The bridge reads the phase currents, cable state and current limit of each wallb
 ## Installation
 
 ```bash
-git clone https://github.com/<your-github-username>/alm-mqtt-bridge.git
+git clone https://github.com/jprates/alm-mqtt-bridge.git
 cd alm-mqtt-bridge
 python3 -m venv venv
 . venv/bin/activate
